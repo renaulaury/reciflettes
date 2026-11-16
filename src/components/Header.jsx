@@ -2,8 +2,6 @@ import { NavLink } from 'react-router-dom'
 
 const links = [
   { to: '/', label: 'Accueil' },
-  { to: '/courses', label: 'Liste de courses' },
-  { to: '/planning', label: 'Planning' },
 ]
 
 export default function Header() {
