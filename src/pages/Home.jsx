@@ -24,7 +24,7 @@ export default function Home() {
     <>
       <div className="toolbar">
         <SearchBar value={query} onChange={setQuery} />
-        <button type="button" className="btn" onClick={modal.open}>📅 Planifier un repas</button>
+        <button type="button" className="btn" onClick={modal.open}>Planifier un repas</button>
       </div>
       <CategoryList selected={debouncedQuery ? null : category} onSelect={(c) => { setCategory(c); setQuery('') }} />
       <h2 className="section-title">{debouncedQuery ? `Résultats pour « ${debouncedQuery} »` : category}</h2>
