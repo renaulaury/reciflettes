@@ -11,12 +11,13 @@ import { toISODate } from '../utils/date.js'
 // 2. on choisit la date de consommation (et le repas),
 // 3. à la validation, la recette + ses ingrédients partent dans le store.
 // `recipe` (optionnel) : recette TheMealDB déjà connue (fiche recette) → l'étape 1 est sautée.
-export default function PlanningForm({ recipe, onClose }) {
+// `initialDate` (optionnel) : date pré-remplie, ex. jour cliqué dans le calendrier.
+export default function PlanningForm({ recipe, initialDate, onClose }) {
   const planRecipe = useStore((state) => state.planRecipe)
 
   const [query, setQuery] = useState('')
   const [selectedId, setSelectedId] = useState('')
-  const [date, setDate] = useState(() => toISODate()) // aujourd'hui par défaut
+  const [date, setDate] = useState(() => initialDate ?? toISODate()) // aujourd'hui par défaut
   const [meal, setMeal] = useState(MEALS[0])
 
   // Recherche lancée à partir de 2 caractères, après 400 ms sans frappe.

@@ -52,7 +52,8 @@ export default function ShoppingList() {
                 <ShoppingItem
                   key={item.id}
                   item={item}
-                  recipeName={recipeNames.get(item.planningId)}
+                  // Recette retirée du planning (synchro prévue au TD4) : on le signale
+                  recipeName={recipeNames.get(item.planningId) ?? 'Recette retirée du planning'}
                   onUpdate={(changes) => updateIngredient(item.id, changes)}
                   onRemove={() => removeIngredient(item.id)}
                 />

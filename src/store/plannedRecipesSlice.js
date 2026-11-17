@@ -24,4 +24,18 @@ export const createPlannedRecipesSlice = (set, get) => ({
 
     return planningId
   },
+
+  // Déplacement d'un repas dans le calendrier (glisser-déposer)
+  updatePlannedRecipeDate: (id, date) =>
+    set((state) => ({
+      plannedRecipes: state.plannedRecipes.map((recipe) => (recipe.id === id ? { ...recipe, date } : recipe)),
+    })),
+
+  // Suppression d'une planification.
+  // Les ingrédients liés ne sont pas touchés : la synchronisation avec
+  // la liste de courses est prévue au TD4.
+  removePlannedRecipe: (id) =>
+    set((state) => ({
+      plannedRecipes: state.plannedRecipes.filter((recipe) => recipe.id !== id),
+    })),
 })
