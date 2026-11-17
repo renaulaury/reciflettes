@@ -75,10 +75,28 @@ main.container { padding-top: 24px; padding-bottom: 48px; }
 .form__field { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: 0.9rem; }
 .form__field input, .form__field select { padding: 10px 12px; border: 1px solid var(--color-border); border-radius: 8px; font: inherit; font-weight: 400; }
 .form__actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+.form__recipe { margin: 0; font-weight: 700; color: var(--color-primary); }
+.form__hint { margin: -6px 0 0; font-size: 0.9rem; color: var(--color-muted); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Liste de courses */
+.shopping__week { color: var(--color-muted); margin-top: -0.5rem; }
+.shopping__day { margin-top: 24px; }
+.shopping__day-title { font-size: 1rem; color: var(--color-primary); }
+.shopping__day-title::first-letter { text-transform: uppercase; }
+.shopping__list { list-style: none; padding: 0; margin: 0; background: var(--color-surface); border-radius: var(--radius); box-shadow: var(--shadow); }
+.shopping__item { display: grid; grid-template-columns: 1fr 90px 130px 150px auto; gap: 10px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--color-border); }
+.shopping__item:last-child { border-bottom: none; }
+.shopping__name { display: flex; flex-direction: column; min-width: 0; }
+.shopping__recipe { font-size: 0.85rem; color: var(--color-muted); }
+.shopping__item input { width: 100%; min-width: 0; padding: 6px 8px; border: 1px solid var(--color-border); border-radius: 8px; font: inherit; }
+.shopping__remove { border: none; background: none; cursor: pointer; color: var(--color-muted); font-size: 1rem; padding: 6px; }
+.shopping__remove:hover { color: #b3261e; }
 
 /* Fiche recette */
 .back { display: inline-block; margin-bottom: 16px; color: var(--color-muted); text-decoration: none; }
 .recipe__meta { color: var(--color-muted); margin-top: -0.5rem; }
+.recipe__instructions + .btn { margin-top: 8px; }
 .recipe__layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
 .recipe__img { border-radius: var(--radius); box-shadow: var(--shadow); }
 .recipe__instructions { white-space: pre-line; line-height: 1.6; }
@@ -105,4 +123,7 @@ main.container { padding-top: 24px; padding-bottom: 48px; }
   .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .planning { grid-template-columns: 1fr; }
   .header__inner { justify-content: center; }
+  /* Ligne d'ingrédient : nom sur toute la largeur, champs en dessous */
+  .shopping__item { grid-template-columns: 64px 1fr 1fr auto; }
+  .shopping__name { grid-column: 1 / -1; }
 }

@@ -1,3 +1,2 @@
-// Valeurs proposées dans le formulaire de planification
-export const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
+// Repas proposés dans le formulaire de planification
 export const MEALS = ['Midi', 'Soir']
