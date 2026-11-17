@@ -10,7 +10,8 @@ import { toISODate } from '../utils/date.js'
 // 1. on cherche une recette TheMealDB par son nom,
 // 2. on choisit la date de consommation (et le repas),
 // 3. à la validation, la recette + ses ingrédients partent dans le store.
-export default function PlanningForm({ onClose }) {
+// `recipe` (optionnel) : recette TheMealDB déjà connue (fiche recette) → l'étape 1 est sautée.
+export default function PlanningForm({ recipe, onClose }) {
   const planRecipe = useStore((state) => state.planRecipe)
 
   const [query, setQuery] = useState('')
@@ -25,8 +26,9 @@ export default function PlanningForm({ onClose }) {
   const { data, loading, error } = useFetch(debouncedQuery.length >= 2 ? endpoints.search(debouncedQuery) : null)
   const results = data?.meals ?? []
 
-  // Recette sélectionnée : celle choisie dans la liste, sinon le 1er résultat
-  const selected = results.find((recipe) => recipe.idMeal === selectedId) ?? results[0]
+  // Recette sélectionnée : celle passée en prop, sinon celle choisie dans la liste,
+  // sinon le 1er résultat
+  const selected = recipe ?? results.find((result) => result.idMeal === selectedId) ?? results[0]
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -44,31 +46,38 @@ export default function PlanningForm({ onClose }) {
 
   return (
     <form className="form" onSubmit={handleSubmit}>
-      <label className="form__field">
-        Rechercher une recette
-        <input
-          type="search"
-          placeholder="Ex. : lasagne, curry…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          autoFocus
-        />
-      </label>
+      {recipe ? (
+        // Recette imposée (depuis la fiche recette) : simple rappel du nom
+        <p className="form__recipe">{recipe.strMeal}</p>
+      ) : (
+        <>
+          <label className="form__field">
+            Rechercher une recette
+            <input
+              type="search"
+              placeholder="Ex. : lasagne, curry…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              autoFocus
+            />
+          </label>
 
-      {/* Messages d'état de la recherche */}
-      {loading && <p className="form__hint">Recherche…</p>}
-      {error && <p className="form__hint status--error">Impossible de charger les recettes.</p>}
-      {data && !data.meals && <p className="form__hint">Aucune recette trouvée.</p>}
+          {/* Messages d'état de la recherche */}
+          {loading && <p className="form__hint">Recherche…</p>}
+          {error && <p className="form__hint status--error">Impossible de charger les recettes.</p>}
+          {data && !data.meals && <p className="form__hint">Aucune recette trouvée.</p>}
 
-      {results.length > 0 && (
-        <label className="form__field">
-          Recette
-          <select value={selected?.idMeal ?? ''} onChange={(e) => setSelectedId(e.target.value)}>
-            {results.map((recipe) => (
-              <option key={recipe.idMeal} value={recipe.idMeal}>{recipe.strMeal}</option>
-            ))}
-          </select>
-        </label>
+          {results.length > 0 && (
+            <label className="form__field">
+              Recette
+              <select value={selected?.idMeal ?? ''} onChange={(e) => setSelectedId(e.target.value)}>
+                {results.map((result) => (
+                  <option key={result.idMeal} value={result.idMeal}>{result.strMeal}</option>
+                ))}
+              </select>
+            </label>
+          )}
+        </>
       )}
 
       <label className="form__field">

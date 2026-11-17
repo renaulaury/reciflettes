@@ -75,6 +75,7 @@ main.container { padding-top: 24px; padding-bottom: 48px; }
 .form__field { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: 0.9rem; }
 .form__field input, .form__field select { padding: 10px 12px; border: 1px solid var(--color-border); border-radius: 8px; font: inherit; font-weight: 400; }
 .form__actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+.form__recipe { margin: 0; font-weight: 700; color: var(--color-primary); }
 .form__hint { margin: -6px 0 0; font-size: 0.9rem; color: var(--color-muted); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -95,6 +96,7 @@ main.container { padding-top: 24px; padding-bottom: 48px; }
 /* Fiche recette */
 .back { display: inline-block; margin-bottom: 16px; color: var(--color-muted); text-decoration: none; }
 .recipe__meta { color: var(--color-muted); margin-top: -0.5rem; }
+.recipe__instructions + .btn { margin-top: 8px; }
 .recipe__layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
 .recipe__img { border-radius: var(--radius); box-shadow: var(--shadow); }
 .recipe__instructions { white-space: pre-line; line-height: 1.6; }
