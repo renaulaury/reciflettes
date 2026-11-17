@@ -6,6 +6,8 @@ import { createId } from '../utils/id.js'
 //
 // Forme d'une entrée :
 // { id, mealId, name, date: 'YYYY-MM-DD', meal: 'Midi' | 'Soir' }
+//
+// set(modif, false, 'nom') : le 3ᵉ argument nomme l'action dans Redux DevTools.
 export const createPlannedRecipesSlice = (set, get) => ({
   plannedRecipes: [],
 
@@ -16,7 +18,7 @@ export const createPlannedRecipesSlice = (set, get) => ({
 
     set((state) => ({
       plannedRecipes: [...state.plannedRecipes, { id: planningId, mealId, name, date, meal }],
-    }))
+    }), false, 'plannedRecipes/planRecipe')
 
     // get() donne accès au store entier : on appelle l'action du slice ingrédients
     // en lui passant l'id de planification qui sert de lien entre les deux.
@@ -29,7 +31,7 @@ export const createPlannedRecipesSlice = (set, get) => ({
   updatePlannedRecipeDate: (id, date) =>
     set((state) => ({
       plannedRecipes: state.plannedRecipes.map((recipe) => (recipe.id === id ? { ...recipe, date } : recipe)),
-    })),
+    }), false, 'plannedRecipes/updatePlannedRecipeDate'),
 
   // Suppression d'une planification.
   // Les ingrédients liés ne sont pas touchés : la synchronisation avec
@@ -37,5 +39,5 @@ export const createPlannedRecipesSlice = (set, get) => ({
   removePlannedRecipe: (id) =>
     set((state) => ({
       plannedRecipes: state.plannedRecipes.filter((recipe) => recipe.id !== id),
-    })),
+    }), false, 'plannedRecipes/removePlannedRecipe'),
 })

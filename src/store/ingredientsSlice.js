@@ -24,16 +24,16 @@ export const createIngredientsSlice = (set) => ({
           ...parseMeasure(measure), // → quantity + unit
         })),
       ],
-    })),
+    }), false, 'ingredients/addIngredients'), // 3ᵉ argument : nom affiché dans Redux DevTools
 
   // changes : champs à modifier, ex. { quantity: 2 }, { unit: 'g' }, { date: '2026-11-20' }
   updateIngredient: (id, changes) =>
     set((state) => ({
       ingredients: state.ingredients.map((item) => (item.id === id ? { ...item, ...changes } : item)),
-    })),
+    }), false, 'ingredients/updateIngredient'),
 
   removeIngredient: (id) =>
     set((state) => ({
       ingredients: state.ingredients.filter((item) => item.id !== id),
-    })),
+    }), false, 'ingredients/removeIngredient'),
 })
