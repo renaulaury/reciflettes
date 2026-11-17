@@ -1,5 +1,6 @@
 const BASE_URL = 'https://www.themealdb.com/api/json/v1/1'
 
+// Toutes les URLs de l'API au même endroit (paramètres encodés)
 export const endpoints = {
   categories: () => `${BASE_URL}/categories.php`,
   byCategory: (category) => `${BASE_URL}/filter.php?c=${encodeURIComponent(category)}`,

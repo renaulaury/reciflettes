@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 
+// Page 404 (route « * » dans App.jsx)
 export default function NotFound() {
   return (
     <section className="status">

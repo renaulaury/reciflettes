@@ -1,3 +1,4 @@
+// Champ de recherche contrôlé : la valeur vit dans le parent (Home)
 export default function SearchBar({ value, onChange }) {
   return (
     <input
