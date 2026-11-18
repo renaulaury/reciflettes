@@ -1,8 +1,7 @@
 import { endpoints } from '../api/mealdb.js'
 import { useFetch } from '../hooks/useFetch.js'
 
-// Liste des catégories TheMealDB affichées en « chips » (centrées, sur plusieurs lignes).
-// selected : catégorie active (null pendant une recherche) ; onSelect : callback au clic.
+// Liste des catégories TheMealDB affichées en « chips » 
 export default function CategoryList({ selected, onSelect }) {
   const { data, loading, error } = useFetch(endpoints.categories())
 

@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 
-// Modale générique : fermeture par la croix, la touche Échap ou un clic sur le fond
+// Modale générique : ferm par la croix, la touche Échap ou un clic sur le fond
 export default function Modal({ title, onClose, children }) {
-  // Écoute Échap tant que la modale est affichée (nettoyage au démontage)
+  // Écoute Échap tant que la modale est affichée 
   useEffect(() => {
     const onKeyDown = (e) => e.key === 'Escape' && onClose()
     document.addEventListener('keydown', onKeyDown)

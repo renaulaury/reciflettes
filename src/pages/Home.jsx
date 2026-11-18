@@ -8,17 +8,14 @@ import RecipeGrid from '../components/RecipeGrid.jsx'
 import Modal from '../components/Modal.jsx'
 import PlanningForm from '../components/PlanningForm.jsx'
 
-// Page d'accueil : recherche, catégories, grille de recettes et modale de planification
+// Page d'accueil 
 export default function Home() {
   const [category, setCategory] = useState('Beef')
   const [query, setQuery] = useState('')
   const modal = useToggle()
 
-  // Debounce : on attend 400 ms sans frappe avant de lancer la recherche
-  // (logique sortie dans le hook useDebounce, réutilisé par la modale)
-  const debouncedQuery = useDebounce(query.trim())
-
-  // Une recherche en cours prend le pas sur la catégorie sélectionnée
+  // Debounce : on attend 400 ms sans frappe avant de lancer la rech
+  const debouncedQuery = useDebounce(query.trim())  
   const url = debouncedQuery ? endpoints.search(debouncedQuery) : endpoints.byCategory(category)
 
   return (

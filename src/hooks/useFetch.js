@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-// Petit hook maison autour de fetch (pas de bibliothèque de requêtes)
+// Evite de répéter fetch + useEffect + useState dans chaque composant
 export function useFetch(url) {
   const [result, setResult] = useState({ url: null, data: null, error: null })
 
