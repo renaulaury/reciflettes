@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
-import { endpoints, getIngredients } from '../api/mealdb.js'
-import { useFetch } from '../hooks/useFetch.js'
+import { useQuery } from '@tanstack/react-query'
+import { recipeQuery, getIngredients } from '../api/mealdb.js'
 import { useToggle } from '../hooks/useToggle.js'
 import Modal from '../components/Modal.jsx'
 import PlanningForm from '../components/PlanningForm.jsx'
@@ -8,14 +8,13 @@ import PlanningForm from '../components/PlanningForm.jsx'
 // Fiche recette 
 export default function RecipeDetail() {
   const { id } = useParams()
-  const { data, loading, error } = useFetch(endpoints.recipe(id))
+  const { data: meal, isPending, isError } = useQuery(recipeQuery(id))
   const modal = useToggle()
 
-  if (loading) return <p className="status">Chargement de la recette…</p>
-  if (error) return <p className="status status--error">Impossible de charger la recette.</p>
+  if (isPending) return <p className="status">Chargement de la recette…</p>
+  if (isError) return <p className="status status--error">Impossible de charger la recette.</p>
 
-  // lookup.php renvoie { meals: [recette] }, ou { meals: null } si l'id n'existe pas
-  const meal = data?.meals?.[0]
+  // lookup.php renvoie { meals: [recette] }, ou { meals: null } si l'id n'existe pas (normalisé en null dans recipeQuery)
   if (!meal) return <p className="status">Recette introuvable.</p>
 
   return (

@@ -1,16 +1,17 @@
-import { endpoints } from '../api/mealdb.js'
-import { useFetch } from '../hooks/useFetch.js'
+import { useQuery } from '@tanstack/react-query'
+import { categoriesQuery } from '../api/mealdb.js'
 
-// Liste des catégories TheMealDB affichées en « chips » 
+// Liste des catégories TheMealDB 
 export default function CategoryList({ selected, onSelect }) {
-  const { data, loading, error } = useFetch(endpoints.categories())
+  const { data: categories, isPending, isError } = useQuery(categoriesQuery())
 
-  if (loading) return <p className="status">Chargement des catégories…</p>
-  if (error) return <p className="status status--error">Impossible de charger les catégories.</p>
+  if (isPending) return <p className="status">Chargement des catégories…</p>
+  if (isError) return <p className="status status--error">Impossible de charger les catégories.</p>
+  if (categories.length === 0) return <p className="status">Aucune catégorie disponible.</p>
 
   return (
     <div className="categories">
-      {data.categories.map((cat) => (
+      {categories.map((cat) => (
         <button
           key={cat.idCategory}
           type="button"

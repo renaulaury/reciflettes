@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { endpoints } from '../api/mealdb.js'
 import { useToggle } from '../hooks/useToggle.js'
 import { useDebounce } from '../hooks/useDebounce.js'
 import SearchBar from '../components/SearchBar.jsx'
@@ -15,8 +14,7 @@ export default function Home() {
   const modal = useToggle()
 
   // Debounce : on attend 400 ms sans frappe avant de lancer la rech
-  const debouncedQuery = useDebounce(query.trim())  
-  const url = debouncedQuery ? endpoints.search(debouncedQuery) : endpoints.byCategory(category)
+  const debouncedQuery = useDebounce(query.trim())
 
   return (
     <>
@@ -27,7 +25,7 @@ export default function Home() {
       {/* Choisir une catégorie vide la recherche */}
       <CategoryList selected={debouncedQuery ? null : category} onSelect={(c) => { setCategory(c); setQuery('') }} />
       <h2 className="section-title">{debouncedQuery ? `Résultats pour « ${debouncedQuery} »` : category}</h2>
-      <RecipeGrid url={url} />
+      <RecipeGrid category={category} search={debouncedQuery} />
       {modal.isOn && (
         <Modal title="Planifier un repas" onClose={modal.close}>
           <PlanningForm onClose={modal.close} />
