@@ -1,28 +1,26 @@
 import { useState } from 'react'
 import { MEALS } from '../constants.js'
-import { endpoints, getIngredients } from '../api/mealdb.js'
-import { useFetch } from '../hooks/useFetch.js'
+import { useQuery } from '@tanstack/react-query'
+import { searchQuery, getIngredients } from '../api/mealdb.js'
 import { useDebounce } from '../hooks/useDebounce.js'
 import { useStore } from '../store/useStore.js'
 import { toISODate } from '../utils/date.js'
 
-// Formulaire de la modale « Planifier un repas » :
-// Rech recette + date conso + midi/soir = valid > store
+// Modale : Rech recette + date conso + midi/soir = valid > store
 export default function PlanningForm({ recipe, initialDate, onClose }) {
   const planRecipe = useStore((state) => state.planRecipe)
 
   const [query, setQuery] = useState('')
   const [selectedId, setSelectedId] = useState('')
-  const [date, setDate] = useState(() => initialDate ?? toISODate()) // today par défaut
+  const [date, setDate] = useState(() => initialDate ?? toISODate()) 
   const [meal, setMeal] = useState(MEALS[0])
 
-  // Rech lancée à partir de 2 caractères,
-  // search.php renvoie les recettes complètes : les ingr st déjà là,
+  // Rech lancée à partir de 2 carac
   const debouncedQuery = useDebounce(query.trim())
-  const { data, loading, error } = useFetch(debouncedQuery.length >= 2 ? endpoints.search(debouncedQuery) : null)
-  const results = data?.meals ?? []
+  const { data, isLoading, isError, isSuccess } = useQuery({ ...searchQuery(debouncedQuery), enabled: debouncedQuery.length >= 2 })
+  const results = data ?? []
 
-  // Recette sélectionnée : celle passée en prop, sinon celle choisie dans la liste sinon 1er rés
+  // Recette passée en prop
   const selected = recipe ?? results.find((result) => result.idMeal === selectedId) ?? results[0]
 
   const handleSubmit = (e) => {
@@ -56,10 +54,10 @@ export default function PlanningForm({ recipe, initialDate, onClose }) {
             />
           </label>
 
-          {/* Messages d'état de la rech */}
-          {loading && <p className="form__hint">Recherche…</p>}
-          {error && <p className="form__hint status--error">Impossible de charger les recettes.</p>}
-          {data && !data.meals && <p className="form__hint">Aucune recette trouvée.</p>}
+          {/* Messages d'état de la rech */}          
+          {isLoading && <p className="form__hint">Recherche…</p>}
+          {isError && <p className="form__hint status--error">Impossible de charger les recettes.</p>}
+          {isSuccess && results.length === 0 && <p className="form__hint">Aucune recette trouvée.</p>}
 
           {results.length > 0 && (
             <label className="form__field">

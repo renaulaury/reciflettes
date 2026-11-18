@@ -1,17 +1,19 @@
-import { useFetch } from '../hooks/useFetch.js'
+import { useQuery } from '@tanstack/react-query'
+import { byCategoryQuery, searchQuery } from '../api/mealdb.js'
 import RecipeCard from './RecipeCard.jsx'
 
-// Grille de recettes : reçoit l'URL à appeler (catégorie ou recherche) et gère les états chargement / erreur / aucun résultat.
-export default function RecipeGrid({ url }) {
-  const { data, loading, error } = useFetch(url)
+// si `search` rempli, sinon catégorie. (chargement / erreur / aucun résultat)
+export default function RecipeGrid({ category, search }) {
+  // Un seul useQuery ( options => clé différente = cache différent)
+  const { data: meals, isPending, isError } = useQuery(search ? searchQuery(search) : byCategoryQuery(category))
 
-  if (loading) return <p className="status">Chargement des recettes…</p>
-  if (error) return <p className="status status--error">Impossible de charger les recettes.</p>
-  if (!data?.meals) return <p className="status">Aucune recette trouvée.</p>
+  if (isPending) return <p className="status">Chargement des recettes…</p>
+  if (isError) return <p className="status status--error">Impossible de charger les recettes.</p>
+  if (meals.length === 0) return <p className="status">Aucune recette trouvée.</p>
 
   return (
     <div className="grid">
-      {data.meals.map((meal) => (
+      {meals.map((meal) => (
         <RecipeCard key={meal.idMeal} meal={meal} />
       ))}
     </div>
