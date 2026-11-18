@@ -2,10 +2,9 @@ import { Link } from 'react-router-dom'
 import { useStore } from '../store/useStore.js'
 import { formatDate, getWeekBounds } from '../utils/date.js'
 
-// Liste de courses : ingrédients de la semaine courante (lundi → dimanche),
-// triés par date de consommation croissante et regroupés par jour.
+// Liste de courses : ingr de la semaine courante (tri date conso + jour)
 export default function ShoppingList() {
-  // Un sélecteur par valeur : le composant ne se re-rend que si elle change
+  // le composant ne se re-rend que si elle change
   const ingredients = useStore((state) => state.ingredients)
   const plannedRecipes = useStore((state) => state.plannedRecipes)
   const updateIngredient = useStore((state) => state.updateIngredient)
@@ -16,9 +15,7 @@ export default function ShoppingList() {
   // planningId → nom de la recette, pour afficher la provenance de chaque ligne
   const recipeNames = new Map(plannedRecipes.map((recipe) => [recipe.id, recipe.name]))
 
-  // Dates au format 'YYYY-MM-DD' : comparaison et tri directs sur les chaînes.
-  // filter() renvoie un nouveau tableau, on peut donc le trier sans toucher au store.
-  // Le tri est stable : à date égale, les ingrédients d'une même recette restent groupés.
+  // Tabl filtré pour groupé ingr
   const weekIngredients = ingredients
     .filter((item) => item.date >= start && item.date <= end)
     .sort((a, b) => a.date.localeCompare(b.date))
@@ -52,7 +49,6 @@ export default function ShoppingList() {
                 <ShoppingItem
                   key={item.id}
                   item={item}
-                  // Recette retirée du planning (synchro prévue au TD4) : on le signale
                   recipeName={recipeNames.get(item.planningId) ?? 'Recette retirée du planning'}
                   onUpdate={(changes) => updateIngredient(item.id, changes)}
                   onRemove={() => removeIngredient(item.id)}
@@ -66,8 +62,7 @@ export default function ShoppingList() {
   )
 }
 
-// Une ligne d'ingrédient éditable : quantité, unité, date, suppression.
-// Chaque modification est envoyée directement au store (champs contrôlés).
+// Une ligne d'ingr éditable : qté, unité, date, suppression.
 function ShoppingItem({ item, recipeName, onUpdate, onRemove }) {
   return (
     <li className="shopping__item">
@@ -82,7 +77,6 @@ function ShoppingItem({ item, recipeName, onUpdate, onRemove }) {
         placeholder="Qté"
         aria-label={`Quantité de ${item.name}`}
         value={item.quantity ?? ''}
-        // Champ vidé → null (ex. « Pinch », sans quantité chiffrée)
         onChange={(e) => onUpdate({ quantity: e.target.value === '' ? null : Number(e.target.value) })}
       />
       <input
@@ -96,8 +90,6 @@ function ShoppingItem({ item, recipeName, onUpdate, onRemove }) {
         type="date"
         aria-label={`Date de consommation de ${item.name}`}
         value={item.date}
-        // On ignore la valeur vide (bouton « effacer » du sélecteur de date) :
-        // une ligne sans date disparaîtrait de la liste.
         onChange={(e) => e.target.value && onUpdate({ date: e.target.value })}
       />
       <button type="button" className="shopping__remove" onClick={onRemove} aria-label={`Supprimer ${item.name}`}>

@@ -15,35 +15,30 @@ import { formatDate, toISODate } from '../utils/date.js'
 import Modal from '../components/Modal.jsx'
 import PlanningForm from '../components/PlanningForm.jsx'
 
-// Page Planning : les recettes planifiées du store affichées dans un calendrier.
-// - clic sur un repas  → détail + suppression
-// - glisser un repas   → change sa date (bonus)
-// - clic sur un jour   → planifier un repas ce jour-là
+// Page Planning : clic repas (détail + del + planifier un repas)
 export default function Planning() {
-  // Lecture du store avec des sélecteurs (re-rendu seulement si la valeur change)
   const plannedRecipes = useStore((state) => state.plannedRecipes)
   const removePlannedRecipe = useStore((state) => state.removePlannedRecipe)
   const updatePlannedRecipeDate = useStore((state) => state.updatePlannedRecipeDate)
 
-  // Modale ouverte : null, { type: 'details', id } ou { type: 'plan', date }
+  // Modale ouverte 
   const [dialog, setDialog] = useState(null)
   const closeDialog = () => setDialog(null)
 
-  // Recettes planifiées → événements FullCalendar.
-  // useMemo : on ne recrée le tableau que si le store change.
+ // useMemo : on ne recrée le tableau que si le store change.
   const events = useMemo(
     () =>
       plannedRecipes.map((recipe) => ({
-        id: recipe.id, // id de planification → retrouver l'entrée du store au clic / au déplacement
+        id: recipe.id, 
         title: recipe.meal ? `${recipe.meal} · ${recipe.name}` : recipe.name,
         start: recipe.date, // 'YYYY-MM-DD'
         allDay: true,
-        order: MEALS.indexOf(recipe.meal), // Midi avant Soir dans une même journée
+        order: MEALS.indexOf(recipe.meal), 
       })),
     [plannedRecipes],
   )
 
-  // Repas affiché dans la modale de détail (lu dans le store, pas dans FullCalendar)
+  // Repas affiché dans la modale de détail 
   const selected = dialog?.type === 'details' ? plannedRecipes.find((recipe) => recipe.id === dialog.id) : null
 
   const handleDelete = () => {
@@ -64,17 +59,15 @@ export default function Planning() {
       <div className="planning-calendar">
         <FullCalendar
           plugins={[dayGridPlugin, interactionPlugin, classicThemePlugin]}
-          locale={frLocale} // textes en français + semaine commençant le lundi
+          locale={frLocale} 
           initialView="dayGridMonth"
           headerToolbar={{ start: 'prev,next today', center: 'title', end: 'dayGridMonth,dayGridWeek' }}
           height="auto"
           events={events}
           eventOrder="order,title"
           editable // autorise le glisser-déposer des événements
-          eventDurationEditable={false} // un repas dure un jour : pas d'étirement
+          eventDurationEditable={false} 
           eventClick={(info) => setDialog({ type: 'details', id: info.event.id })}
-          // L'événement a été lâché sur un autre jour : on met à jour le store,
-          // qui renvoie la nouvelle liste d'événements au calendrier.
           eventDrop={(info) => updatePlannedRecipeDate(info.event.id, toISODate(info.event.start))}
           dateClick={(info) => setDialog({ type: 'plan', date: info.dateStr })}
         />

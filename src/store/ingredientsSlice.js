@@ -1,14 +1,8 @@
 import { createId } from '../utils/id.js'
 import { parseMeasure } from '../utils/measure.js'
 
-// Slice « ingrédients » : une ligne par ingrédient d'une recette planifiée.
-//
-// Forme d'une ligne :
+// une ligne par ingr d'une recette planifiée.
 // { id, planningId, name, quantity: number | null, unit, date: 'YYYY-MM-DD' }
-//
-// `planningId` pointe vers l'entrée de plannedRecipes d'où vient l'ingrédient.
-// La date est copiée sur chaque ligne pour pouvoir la modifier ligne par ligne
-// depuis la liste de courses.
 export const createIngredientsSlice = (set) => ({
   ingredients: [],
 

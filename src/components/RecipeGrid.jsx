@@ -1,8 +1,7 @@
 import { useFetch } from '../hooks/useFetch.js'
 import RecipeCard from './RecipeCard.jsx'
 
-// Grille de recettes : reçoit l'URL à appeler (catégorie ou recherche) et gère
-// les états chargement / erreur / aucun résultat.
+// Grille de recettes : reçoit l'URL à appeler (catégorie ou recherche) et gère les états chargement / erreur / aucun résultat.
 export default function RecipeGrid({ url }) {
   const { data, loading, error } = useFetch(url)
 

@@ -1,18 +1,9 @@
 import { createId } from '../utils/id.js'
 
-// Slice « recettes planifiées ».
-// Une entrée = une planification : la même recette TheMealDB peut être planifiée
-// plusieurs fois, chaque planification a donc son propre `id`.
-//
-// Forme d'une entrée :
-// { id, mealId, name, date: 'YYYY-MM-DD', meal: 'Midi' | 'Soir' }
-//
-// set(modif, false, 'nom') : le 3ᵉ argument nomme l'action dans Redux DevTools.
+// recettes planifiées
 export const createPlannedRecipesSlice = (set, get) => ({
   plannedRecipes: [],
-
   // Planifie une recette et enregistre ses ingrédients dans l'autre slice.
-  // `ingredients` : tableau { name, measure } tel que renvoyé par getIngredients().
   planRecipe: ({ mealId, name, date, meal, ingredients }) => {
     const planningId = createId()
 
@@ -20,22 +11,18 @@ export const createPlannedRecipesSlice = (set, get) => ({
       plannedRecipes: [...state.plannedRecipes, { id: planningId, mealId, name, date, meal }],
     }), false, 'plannedRecipes/planRecipe')
 
-    // get() donne accès au store entier : on appelle l'action du slice ingrédients
-    // en lui passant l'id de planification qui sert de lien entre les deux.
     get().addIngredients(planningId, date, ingredients)
 
     return planningId
   },
 
-  // Déplacement d'un repas dans le calendrier (glisser-déposer)
+  // Déplacement d'un repas dans le calendrier 
   updatePlannedRecipeDate: (id, date) =>
     set((state) => ({
       plannedRecipes: state.plannedRecipes.map((recipe) => (recipe.id === id ? { ...recipe, date } : recipe)),
     }), false, 'plannedRecipes/updatePlannedRecipeDate'),
 
-  // Suppression d'une planification.
-  // Les ingrédients liés ne sont pas touchés : la synchronisation avec
-  // la liste de courses est prévue au TD4.
+  // Del planification.
   removePlannedRecipe: (id) =>
     set((state) => ({
       plannedRecipes: state.plannedRecipes.filter((recipe) => recipe.id !== id),

@@ -12,7 +12,6 @@ export default function Header() {
     <header className="header">
       <div className="container header__inner">
         <NavLink to="/" className="header__logo">
-          {/* Logo patate (public/logo.svg) ; alt vide car le texte « Reciflettes » suit */}
           <img src="/logo.svg" alt="" />
           Reciflettes
         </NavLink>

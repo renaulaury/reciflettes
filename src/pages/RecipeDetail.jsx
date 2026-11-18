@@ -5,9 +5,8 @@ import { useToggle } from '../hooks/useToggle.js'
 import Modal from '../components/Modal.jsx'
 import PlanningForm from '../components/PlanningForm.jsx'
 
-// Fiche recette : photo, ingrédients, préparation, vidéo, et bouton de planification
+// Fiche recette 
 export default function RecipeDetail() {
-  // :id de l'URL /recette/:id = identifiant TheMealDB
   const { id } = useParams()
   const { data, loading, error } = useFetch(endpoints.recipe(id))
   const modal = useToggle()
@@ -41,14 +40,13 @@ export default function RecipeDetail() {
 
       <section>
         <h2>Préparation</h2>
-        {/* white-space: pre-line (CSS) conserve les retours à la ligne de l'API */}
         <p className="recipe__instructions">{meal.strInstructions}</p>
         {meal.strYoutube && (
           <a href={meal.strYoutube} target="_blank" rel="noreferrer" className="btn">▶ Voir la vidéo</a>
         )}
       </section>
 
-      {/* Même modale que sur l'accueil, mais la recette est déjà connue : pas de recherche */}
+      {/* Modale */}
       {modal.isOn && (
         <Modal title="Planifier cette recette" onClose={modal.close}>
           <PlanningForm recipe={meal} onClose={modal.close} />

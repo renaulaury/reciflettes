@@ -7,28 +7,22 @@ import { useStore } from '../store/useStore.js'
 import { toISODate } from '../utils/date.js'
 
 // Formulaire de la modale « Planifier un repas » :
-// 1. on cherche une recette TheMealDB par son nom,
-// 2. on choisit la date de consommation (et le repas),
-// 3. à la validation, la recette + ses ingrédients partent dans le store.
-// `recipe` (optionnel) : recette TheMealDB déjà connue (fiche recette) → l'étape 1 est sautée.
-// `initialDate` (optionnel) : date pré-remplie, ex. jour cliqué dans le calendrier.
+// Rech recette + date conso + midi/soir = valid > store
 export default function PlanningForm({ recipe, initialDate, onClose }) {
   const planRecipe = useStore((state) => state.planRecipe)
 
   const [query, setQuery] = useState('')
   const [selectedId, setSelectedId] = useState('')
-  const [date, setDate] = useState(() => initialDate ?? toISODate()) // aujourd'hui par défaut
+  const [date, setDate] = useState(() => initialDate ?? toISODate()) // today par défaut
   const [meal, setMeal] = useState(MEALS[0])
 
-  // Recherche lancée à partir de 2 caractères, après 400 ms sans frappe.
-  // search.php renvoie les recettes complètes : les ingrédients sont déjà là,
-  // pas besoin d'un second appel à lookup.php.
+  // Rech lancée à partir de 2 caractères,
+  // search.php renvoie les recettes complètes : les ingr st déjà là,
   const debouncedQuery = useDebounce(query.trim())
   const { data, loading, error } = useFetch(debouncedQuery.length >= 2 ? endpoints.search(debouncedQuery) : null)
   const results = data?.meals ?? []
 
-  // Recette sélectionnée : celle passée en prop, sinon celle choisie dans la liste,
-  // sinon le 1er résultat
+  // Recette sélectionnée : celle passée en prop, sinon celle choisie dans la liste sinon 1er rés
   const selected = recipe ?? results.find((result) => result.idMeal === selectedId) ?? results[0]
 
   const handleSubmit = (e) => {
@@ -39,7 +33,7 @@ export default function PlanningForm({ recipe, initialDate, onClose }) {
       mealId: selected.idMeal,
       name: selected.strMeal,
       ingredients: getIngredients(selected),
-      date, // date de consommation choisie dans la modale
+      date, // date de conso choisie dans la modale
       meal,
     })
     onClose()
@@ -48,7 +42,6 @@ export default function PlanningForm({ recipe, initialDate, onClose }) {
   return (
     <form className="form" onSubmit={handleSubmit}>
       {recipe ? (
-        // Recette imposée (depuis la fiche recette) : simple rappel du nom
         <p className="form__recipe">{recipe.strMeal}</p>
       ) : (
         <>
@@ -63,7 +56,7 @@ export default function PlanningForm({ recipe, initialDate, onClose }) {
             />
           </label>
 
-          {/* Messages d'état de la recherche */}
+          {/* Messages d'état de la rech */}
           {loading && <p className="form__hint">Recherche…</p>}
           {error && <p className="form__hint status--error">Impossible de charger les recettes.</p>}
           {data && !data.meals && <p className="form__hint">Aucune recette trouvée.</p>}
